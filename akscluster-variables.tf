@@ -1,12 +1,12 @@
 variable "location" {
-    default = "east us"
+    default = "west europe"
 }
 variable "resource_group_name" {
-    default = "akscluster"
+    default = "k8s-rg"
 }
 
 variable "cluster_name" {
-    default = "sjtr1234"
+    default = "samjaincluster"
 }
 variable "dns_prefix" {
     default = "sam"
