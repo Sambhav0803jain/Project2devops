@@ -1,0 +1,848 @@
+Sandeep.kumar0803@outlook.com
+http://notepad.pw/tmdev-12345
+
+sudo su -
+
+ apt-get update
+
+apt-get install -y unzip
+
+apt-get install -y tree
+
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+https://aka.ms/installazurecliwindows (on windows vm)
+
+
+
+
+https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli
+
+
+az login on windows cmd
+az login on linux also
+
+
+git --version
+
+
+Powershell:
+---------------
+ Set-ExecutionPolicy Unrestricted
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+Install-Module -Name az -AllowClobber
+
+Uninstall-AzureRm
+
+Connect-AzAccount
+
+https://code.visualstudio.com/download ( windows installer 64 bit)
+
+
+week 2:
+-----------------
+https://git-scm.com/downloads
+
+git --version
+
+Sign-up:
+https://github.com/
+
+http://dev.azure.com
+or
+https://azure.microsoft.com/en-us/services/devops
+
+https://jdk12345.s3-us-west-2.amazonaws.com/jdk-8u202-windows-x64.exe
+
+https://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/neon/3/eclipse-jee-neon-3-win32-x86_64.zip
+
+
+
+
+
+
+ git pull
+   32  ls -al
+   33  git status
+   34  cd WebContent/
+   35  ls
+   36  vi index.jsp
+   37  cd ..
+   38  git status
+  
+   40  git add WebContent/index.jsp
+   41  git status
+   
+   43  git commit -m v1.3
+   44  git status
+   45  git push origin master
+
+
+
+Day2:
+-------
+https://desktop.github.com/
+
+ curl "https://releases.hashicorp.com/terraform/0.15.3/terraform_0.15.3_linux_amd64.zip" -o terraform_0.15.3_linux_amd64.zip
+
+unzip terraform_0.15.3_linux_amd64.zip
+
+mv terraform /usr/sbin/
+
+
+
+Week 3-Day1:
+-----------------------
+
+
+terraform import azurerm_resource_group.demo1 "/subscriptions/b2696221-d449-453a-8ff9-34cd30c256c0/resourceGroups/hello-rg1"
+
+ mkdir tfdemos
+   42  cd tfdemos
+   43  mkdir demo4
+   44  cd demo4
+   45  vi demo4.tf
+   46  az --version
+   47  az login
+
+
+
+demo4.tf:
+------------
+provider "azurerm" {
+  features {}
+}
+
+terraform {
+    backend "azurerm" {
+        resource_group_name ="storage-rg1"
+        storage_account_name = "st1tr1"
+        container_name = "con1"
+        key = "terraform.tfstate"
+    }
+}
+
+resource "azurerm_resource_group" "demo" {
+  name     = "demo123rg"
+    location = "centralus"
+}
+
+
+
+demo3.tf:
+------------
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "demo" {
+  name     = "demorg1"
+  location = "westus"
+  tags = {
+    "dept"        = "HR"
+    
+  }
+}
+
+resource "azurerm_resource_group" "demo1" {
+  name     = "demorg2"
+  location = "westus"
+}
+
+ 10 terraform validate
+  11 terraform plan
+  14 terraform apply
+
+
+Env Variables:
+--------------
+ARM_CLIENT_ID="00000000-0000-0000-0000-000000000000"
+ARM_CLIENT_SECRET="00000000-0000-0000-0000-000000000000"
+ARM_SUBSCRIPTION_ID="00000000-0000-0000-0000-000000000000"
+ARM_TENANT_ID="00000000-0000-0000-0000-000000000000"
+
+.tf file:
+-------
+subscription_id = "00000000-0000-0000-0000-000000000000"
+client_id       = "00000000-0000-0000-0000-000000000000"
+client_secret   = "00000000-0000-0000-0000-000000000000"
+tenant_id       = "00000000-0000-0000-0000-000000000000"
+
+
+
+
+Week 3- Day 2:
+---------------------
+demo8.tf:
+------------
+provider "azurerm" {
+  features {}
+}
+
+resource "azurerm_resource_group" "demo1" {
+  name     = "testrg1"
+  location = "westus"
+  depends_on = [azurerm_resource_group.demo3]
+}
+
+resource "azurerm_resource_group" "demo2" {
+  name     = "testrg2"
+  location = "westus"
+  depends_on = [azurerm_resource_group.demo1]
+}
+resource "azurerm_resource_group" "demo3" {
+  name     = "testrg3"
+  location = "westus"
+}
+
+
+basetemplate.tf:
+-----------------
+
+resource "azurerm_resource_group" "demo" {
+  name     = var.rgname
+  location = var.region
+}
+
+vars.tf:
+---------
+variable "rgname" {
+    type = string
+    
+}
+
+variable "region" {
+    type = string
+    
+
+}
+
+
+final.tf:
+-----------
+provider "azurerm" {
+    features {}
+}
+
+module "prodmodule" {
+    source = "./envs/prod"
+}
+
+module "devmodule" {
+    source = "./envs/dev"
+}
+
+
+
+prodmoddef.tf:
+------------------
+module "prodmodule" {
+
+    source = "../../base"
+    rgname = "prod1rg1"
+    region = "uksouth"
+}
+
+
+
+
+demo6.tf:
+-----------
+
+provider "azurerm" {
+  features {}
+}
+
+
+resource "azurerm_resource_group" "demo" {
+  name     = var.rgname
+ location = var.loc["us"]
+}
+
+variables.tf:
+-----------------
+variable "rgname" {
+    type = string
+    default = "xyz123rg1"
+}
+
+variable "region" {
+    type = list
+    default = ["southindia" , "uksouth" , "eastus"]
+
+}
+variable "loc" {
+    type = map
+    default = {"in" = "southindia" 
+                "uk" = "uksouth"  
+                "us" = "eastus"
+              }
+
+}
+
+values.tfvars:
+----------------
+rgname = "abc123rg1"
+
+
+
+terraform plan -var-file="values.tfvars"
+
+ terraform plan -var "rgname=abc123rg"
+
+
+
+ 8 terraform workspace --help
+   9 terraform workspace list
+  10 terraform workspace new devspace
+  11 terraform workspace show
+  12 terraform workspace list
+  13 terraform workspace select default
+  14 terraform workspace list
+  15 terraform workspace new qaspace
+  16 terraform workspace list
+  17 terraform workspace select devspace
+terraform import azurerm_resource_group.demo "/subscriptions/b2696221-d449-453a-8ff9"
+
+27th May:Week 4 Day 1
+------------------
+
+
+ sudo apt-get update
+ sudo apt-get install -y tree
+tree .ssh
+ ssh-keygen
+ tree .ssh
+ 
+10  ssh-copy-id  vmadmin@anode1.trnglabs.com
+   11  ssh vmadmin@anode1.trnglabs.com
+
+Ansible Server VM:
+---------------------
+ sudo apt-get install -y python-pip
+ pip --version
+
+$ sudo apt-get install software-properties-common
+$ sudo apt-add-repository ppa:ansible/ansible
+$ sudo apt-get update
+$ sudo apt-get install ansible
+ansible --version
+
+ 32  sudo chown -R vmadmin:vmadmin /etc/ansible/
+   33  ls -al /etc/ansible/
+
+
+ 36  cd /etc/ansible/
+   37  ls
+   38  vi ansible.cfg
+   39  vi hosts
+   40  ansible --list-hosts all
+   
+   42  ansible all -m ping
+
+
+sudo pip install ansible[azure]
+
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+
+in Home Dir:
+----------------
+cd ~ 
+mkdir .azure
+   70  ls -al
+   71  cd .azure/
+   72  touch credentials
+   73  vi credentials
+
+[default] 
+subscription_id=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 
+client_id=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx 
+secret=xxxxxxxxxxxxxxxxx 
+tenant=xxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+
+
+80  mkdir demo1
+   81  	cd demo1
+   82  touch inventory.azure_rm.yml
+   83  vi inventory.azure_rm.yml
+
+plugin: azure_rm
+include_vm_resource_groups:
+- linux-rg1
+auth_source: auto
+
+ ansible all --list-hosts -i inventory.azure_rm.yml
+
+ansible -m ping all
+
+ansible -m command -a "ls" all
+
+
+
+ansible all -m file -a "dest=/home/vmadmiansible all -m copy -a "src=/etc/ansible/hosts dest=/tmp/hosts"n/newfolder1 mode=777 owner=vmadmin group=vmadmin state=directory" 
+
+ansible all -m file -a "dest=/home/vmadmin/new state=absent"
+
+ansible linuxnodes -m setup
+
+
+3rd June:
+-----------------
+---  
+- hosts: linuxnodes 
+  vars:  
+    variable1: 'Hello'  
+    variable2: 'My first playbook using template'  
+  tasks:  
+    - name: Basic Template Example  
+      template:  
+        src: example1.j2  
+        dest: /home/vmadmin/output.txt  
+File: example1.j2
+{{variable1}}  
+No change in this line  
+{{variable2}}  
+
+
+---
+- hosts: grp1
+  vars:
+      password: "trainer123"
+  tasks:
+      - name: create a user
+        user:
+                name: trainer
+                password: password
+        become: yes
+
+- hosts: all
+  vars:
+    greeting: Hello world! 
+
+  tasks:
+  - name: Ansible Basic Variable Example
+    debug:
+      msg: "{{ greeting }}"
+
+
+- hosts: all
+  vars:
+    continents:
+      - Africa
+      - Asia
+      - South America
+      - North America
+      - Europe
+      
+  tasks:
+  - name: Ansible List variable Example
+    debug:
+      msg: "{{ continents [1] }}"
+
+- hosts: all
+  vars:
+    continents: [Africa, Asia, South America, North America, Europe]
+
+  tasks:
+  - name: Ansible array variables example
+    debug: 
+      msg: "{{ item }}"
+    with_items:
+      - "{{ continents }}"
+
+---
+- hosts: linuxnodes
+  vars:
+     Tree:
+        k1: 'v1'
+        k2: 'v2'
+        k3: 'v3'
+  tasks:
+      - name: print Tree/Dict looping example
+        debug:
+            msg: " Name: {{ item.key }} Value: {{ item.value }}"
+        with_dict: "{{ Tree }}"
+  tasks:
+      - name: Ansible List variable Example
+        debug:
+            msg: "{{ Tree.k1 }}"
+
+---
+- hosts: all
+  tasks:
+  - name: Ansible pre-defined Variable Example
+    debug:
+      msg: "{{ ansible_user_dir }}"
+
+
+cd /etc
+   25  sudo mkdir ansible
+   26  cd ansible/
+   27  sudo mkdir facts.d
+   28  cd ..
+   29  tree ansible/
+   30  sudo apt-get install -y tree
+   31  tree ansible/
+   32  sudo touch  /etc/ansible/facts.d/customfact_1.fact
+   33  tree ansible/
+   34  sudo touch /etc/ansible/facts.d/customfact_1.fact
+   35  tree ansible/
+  
+   37  sudo vi /etc/ansible/facts.d/customfact_1.fact
+
+#!/bin/sh
+echo "{\"myfact1\" : \"myvalue1\"}"
+
+sudo chown -R vmadmin:vmadmin ansible/
+   41  ls -al ansible/
+   42  exit
+   43  cd /etc/ansible/facts.d/
+   44  ls
+   45  ls -al
+   46  chmod 777 customfact_1.fact
+
+---
+
+- hosts: linuxnodes
+
+  tasks:
+   - name: Get custom facts
+     debug:
+      msg: The custom fact is {{ansible_local.customfact_1}}
+
+
+---
+- hosts: linuxnodes
+  become: yes
+  tasks:
+       - name: task1
+         debug:
+            msg: "task1 executed"
+         tags: tag1
+       - name: task2
+         debug:
+            msg: "task2 executed"
+         tags: tag2
+       - name: task3
+         debug:
+            msg: "task3 executed"
+         tags: tag3
+         
+       - name: task4
+         debug:
+            msg: "task4 executed"
+         tags: tag4
+
+ mkdir vaultdemo
+  400  cd vaultdemo/
+  401  ls
+  402  ansible-vault --help
+  403  ansible-vault create demo1.txt
+  404  ls
+  405  cat demo1.txt
+  406  ansible-vault view demo1.txt
+  407  ansible-vault edit demo1.txt
+  408  ansible-vault --help
+  409  ansible-vault decrypt demo1.txt
+  410  cat demo1.txt
+  411  ansible-vault encrypt demo1.txt
+  412  cat demo1.txt
+  413  ansible-vault rekey demo1.txt
+
+---
+- hosts: linuxnodes
+  tasks:
+      - name: java install redhat
+        yum:
+            name: java-1.8.0-openjdk
+            state: present
+        become: yes
+        when: ansible_facts['os_family'] == "RedHat"
+      - name: java install ubuntu
+        apt:
+            name: openjdk-8-jdk
+            state: present
+        become: yes
+        when: ansible_facts['os_family'] == "Debian"
+
+
+---
+- hosts: linuxservers
+  tasks:
+      - name: install elinks
+        apt: 
+            name: "{{ item }}" 
+            state: latest
+        become: yes
+        loop:
+                - tree
+                - unzip
+
+
+11th June:
+--------------------
+ 106  sudo docker pull testacr1tr1.azurecr.io/repo2:myApp1
+  107  sudo docker images
+  108  sudo docker run -d -p 80:8080 --name testcon1 testacr1tr1.azurecr.io/repo2:myApp1
+  109  sudo docker ps -a
+
+
+
+az acr build --registry testacr1tr1.azurecr.io --image testacr1tr1.azurecr.io/repo2:myApp1 .
+
+
+
+
+
+
+
+94  sudo docker tag mycustomimg1:latest testacr1tr1.azurecr.io/repo1:mycustomnginx
+   95  sudo docker images
+   96  sudo docker push testacr1tr1.azurecr.io/repo1:mycustomnginx
+  
+
+
+
+77  sudo docker images
+   78  sudo docker tag mycustomimg1:latest paparaoc/repo1:mycustomimg1
+   79  sudo docker images
+   80  sudo docker login
+   81  sudo apt install gnupg2 pass
+   82  clear
+   83  sudo docker login
+   84  sudo docker push paparaoc/repo1:mycustomimg1
+   85  sudo docker tag mycustomimg1:latest paparaoc/repo2:mycustomimg1
+   86  sudo docker images
+   87  sudo docker push paparaoc/repo2:mycustomimg1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+56  mkdir demo1
+   57  cd demo1
+   58  vi Dockerfile
+
+FROM nginx
+RUN echo "<h1>My custom image using Dockerfile</h1>" > /usr/share/nginx/html/index.html
+
+   59  cat Dockerfile
+   60  sudo docker images
+   61  ls
+   62  sudo docker build -t mycustomimg1 .
+   63  sudo docker images
+   64  sudo docker run -d -p 80:80 --name con1 mycustomimg1
+   65  sudo docker ps -a
+
+17th June:
+---------------------
+sudo apt-get update && sudo apt-get install -y apt-transport-https gnupg2 curl
+
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update
+
+sudo apt-get install -y kubectl
+
+
+sudo su -
+
+az login
+   54  az account set --subscription b2696221-d449-453a-8ff9-34cd30c256c0
+   55  az aks get-credentials --resource-group k8s-rg1 --name testcluster1
+   56  kubectl version
+   57  clear
+   58  kubectl cluster-info
+   59  kubectl get nodes
+
+
+sudo su -
+watch -x kubectl get all
+
+ 67  mkdir demo1
+   68  cd demo1
+   69  ls
+   70  kubectl create deploy myapp --image testacr1tr1.azurecr.io/repo1:mycustomnginx --dry-run -o yaml > deployment.yaml
+   71  ls
+   72  cat deployment.yaml
+   73  kubectl apply -f deployment.yaml
+   74  vi deployment.yaml
+   75  kubectl apply -f deployment.yaml
+   76  kubectl expose deploy myapp --port 80 --type=LoadBalancer --dry-run -o yaml > service.yaml
+   77  ls
+   78  kubectl apply -f service.yaml
+   79  kubectl delete service myapp
+kubectl delete deployment myapp
+
+sidecar.yaml:
+-----------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx-webapp
+  name: nginx-webapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-webapp
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-webapp
+    spec:
+      containers:
+      - image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container 1' >> /var/log/index.html; sleep 5;done"]
+        name: sidecar-container1
+        resources: {}
+        volumeMounts:
+          - name: var-logs
+            mountPath: /var/log
+      - image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container 2' >> /var/log/index.html; sleep 5;done"]
+        name: sidecar-container2
+        resources: {}
+        volumeMounts:
+          - name: var-logs
+            mountPath: /var/log
+      - image: nginx
+        name: main-container
+        resources: {}
+        ports:
+          - containerPort: 80
+        volumeMounts:
+          - name: var-logs
+            mountPath: /usr/share/nginx/html
+      dnsPolicy: Default
+      volumes:
+      - name: var-logs
+        emptyDir: {}
+status: {}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-webapp
+  labels:
+    run: nginx-webapp
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: nginx-webapp
+  type: LoadBalancer
+
+
+rd1.yaml:
+------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-dep
+  namespace: default
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: hello-dep 
+
+  template:
+    metadata:
+      labels:
+        app: hello-dep
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:1.0
+        imagePullPolicy: Always
+        name: hello-dep
+        ports:
+        - containerPort: 8080
+rd2.yaml:
+------------
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-dep
+  namespace: default
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: hello-dep
+  template:
+    metadata:
+      labels:
+        app: hello-dep
+    spec:
+      containers:
+      - image: gcr.io/google-samples/hello-app:2.0
+        imagePullPolicy: Always
+        name: hello-dep
+        ports:
+        - containerPort: 8080
+        readinessProbe:
+          httpGet:
+             path: /
+             port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+
+Day 18 june
+https://github.com/paparaoc/AZ-204-DevelopingSolutionsforMicrosoftAzure
+
+
+day 25 june
+from PAPARAO to All Participants:
+https://github.com/AzureADQuickStarts/AppModelv2-WebApp-OpenIDConnect-DotNet/archive/master.zip
+from PAPARAO to All Participants:
+https://docs.microsoft.com/en-us/azure/active-directory/develop/quickstart-v2-aspnet-webapp
+from Sambhav to All Panelists:
+yes
+from PAPARAO to All Participants:
+https://docs.microsoft.com/en-us/samples/azure-samples/active-directory-java-webapp-openidconnect/integrating-azure-ad-into-a-java-web-application/
+
+if there is any problem in subscription
+for powershell
+Select-AzSubscription -SubscriptionId a0e4a006-82ce-4383-9768-47272f643259
+
+for cmd
+az login --tenant 0aad892b-52eb-4088-b271-f5efc05f1db5
+
+
+Day 1 july
+https://github.com/paparaoc/AZ-204-DevelopingSolutionsforMicrosoftAzure/blob/master/Instructions/Labs/AZ-204_02_lab_ak.md
